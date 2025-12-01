@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title%}{{super()}} - Profiles Admin {% endblock %}
+{% block content %}
+<h1>All Feedback</h1>
+<table class="table table-striped" border="1">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Post</th>
+    </tr>
+    {% for profile in profiles %}
+    <tr>
+        <td>{{ profile.id }}</td>
+        <td>{{ profile.username }}</td>
+        <td>{{ profile.email }}</td>
+        <td>{{ profile.post }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

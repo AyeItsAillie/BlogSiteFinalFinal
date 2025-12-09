@@ -14,6 +14,7 @@ class Profile(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(25),nullable=False)
     email = db.Column(db.String(100),nullable=False)
+    post = db.Column(db.String(200),nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
 with app.app_context():
@@ -64,3 +65,69 @@ def profile():
 def admin_profiles():
     profiles = Profile.query.all()
     return render_template('Admin_profiles.html', profiles=profiles)
+
+@app.route('/admin/profiles/deleteButton', methods=['POST'])
+def admin_profilesDeleteButton():
+    try:
+        profileId = request.form.get('profileId', '').strip()
+        profile_to_delete = Profile.query.filter_by(id=profileId).first()
+        if not profile_to_delete:
+            error = f"No profiles found with the specified id found."
+            profiles = Profile.query.all()
+            return render_template('admin_profiles.html', profiles=profile, error=error)
+        db.session.delete(profile_to_delete)
+        db.session.commit()
+        return redirect(url_for('admin_profiles'))
+    except Exception as e:
+        error = f"Error deleting profile: {str(e)}"
+        profiles = Profile.query.all()
+        return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+@app.route('/admin/profiles/edit', methods=['GET', 'POST'])
+def admin_profiles_edit():
+    if request.method == 'POST':
+        profileId = request.form.get('profileId', '')
+
+        if not profileId:
+            error = f"No profile id provided."
+            profiles = Profile.query.all()
+            return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+        profileToUpdate = Profile.query.filter_by(id=profileId).first()
+
+        if not profileToUpdate:
+            error = f"No profile found to edit with id = {profileId}."
+            profiles = Profile.query.all()
+            return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+        try:
+            profileToUpdate.name = request.form.get(
+                'username', profileToUpdate.username)
+            profileToUpdate.email = request.form.get(
+                'email', profileToUpdate.email)
+            profileToUpdate.quan = request.form.get(
+                'post', profileToUpdate.post)
+            db.session.commit()
+            return redirect(url_for('admin_profiles'))
+        except Exception as e:
+            db.session.rollback()
+            error = f"Error writing to database file."
+            profiles = Profile.query.all()
+            return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+    profileId = request.args.get('profileId')
+
+    if not profileId:
+        error = f"No profile id provided."
+        profiles = Profile.query.all()
+        return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+    profileToEdit = Profile.query.filter_by(id=profileId).first()
+
+    if not profileToEdit:
+        error = f"No profile found to edit with id = {profileId}"
+        profiles = Profile.query.all()
+        return render_template('admin_profiles.html', profiles=profiles, error=error)
+
+    return render_template('profileEdit.html', profile=profileToEdit)
+

@@ -8,6 +8,8 @@
         <th>Username</th>
         <th>Email</th>
         <th>Post</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     {% for profile in profiles %}
     <tr>
@@ -15,6 +17,26 @@
         <td>{{ profile.username }}</td>
         <td>{{ profile.email }}</td>
         <td>{{ profile.post }}</td>
+        <td>
+            <div>
+                <a href="{{url_for('admin_profiles_edit')}}?profileID={{profile.id}}"
+                ><button>Edit</button></a>
+            </div>
+        </td>
+        <td>
+            <div>
+        <form method="POST" action="{{url_for('admin_profilesDeleteButton')}}">
+          <input
+            type="hidden"
+            name="profileId"
+            id="profileId"
+            value="{{profile.id}}"
+          />
+        <input name="deleteStyle" type="hidden" value="soft" />
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+        </td>
     </tr>
     {% endfor %}
 </table>

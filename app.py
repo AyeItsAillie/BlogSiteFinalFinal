@@ -101,11 +101,11 @@ def admin_profiles_edit():
             return render_template('admin_profiles.html', profiles=profiles, error=error)
 
         try:
-            profileToUpdate.name = request.form.get(
+            profileToUpdate.username = request.form.get(
                 'username', profileToUpdate.username)
             profileToUpdate.email = request.form.get(
                 'email', profileToUpdate.email)
-            profileToUpdate.quan = request.form.get(
+            profileToUpdate.post = request.form.get(
                 'post', profileToUpdate.post)
             db.session.commit()
             return redirect(url_for('admin_profiles'))
@@ -131,3 +131,25 @@ def admin_profiles_edit():
 
     return render_template('profileEdit.html', profile=profileToEdit)
 
+@app.route('/admin/profiles/edit/<int:profileID>', methods=['GET', 'POST'])
+def edit_post(profileID):
+    profile = Profile.query.get_or_404(profileID)
+    
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        post = request.form.get('post', '').strip()
+
+        if not username or not email or not post:
+            #flash('Username, Email and Post are required.', 'danger')
+            return render_template('profileEdit.html', profile=profile, page_type='input')
+
+        profile.username = username
+        profile.email = email
+        profile.post = post
+        db.session.commit()
+
+        #flash('Post updated successfully!', 'success')
+        return redirect(url_for('Admin_profiles', profileID=profileID))
+
+    return render_template('profileEdit.html', profile=profile, page_type='input')

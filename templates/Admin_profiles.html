@@ -19,7 +19,7 @@
         <td>{{ profile.post }}</td>
         <td>
             <div>
-                <a href="{{url_for('admin_profiles_edit')}}?profileID={{profile.id}}"
+                <a href="{{url_for('edit_post', profileID=profile.id)}}"
                 ><button>Edit</button></a>
             </div>
         </td>

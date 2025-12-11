@@ -16,6 +16,7 @@ class Profile(db.Model):
     email = db.Column(db.String(100),nullable=False)
     post = db.Column(db.String(200),nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    #comment = db.relationship('Comment', backref='post', lazy=True)
 
 with app.app_context():
     db.create_all()
@@ -90,6 +91,14 @@ def view_post(profileID):
 
     return render_template('viewPost.html', profiles=profiles, profile=profile)
 
+@app.route('/view/post/<int:profileID>/comment', methods=['GET', 'POST'])
+def add_comment(profileID):
+    profiles = Profile.query.all()
+
+
+    profile = Profile.query.get_or_404(profileID)
+
+    return render_template('add_comment.html', profiles=profiles, profile=profile)
 
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])

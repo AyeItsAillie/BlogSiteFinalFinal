@@ -2,17 +2,18 @@
 %} {% block content%}
 
 <h1>View Post</h1>
+<p>________________________________________</p>
 {% if error %}
 <p class="error">{{error}}</p>
 {% endif %}
 
-{% for profile in profiles %}
+
 <body>
     <h2>{{ profile.username }}</h2>
     <p>{{ profile.post }}</p>
-    
+    <p>________________________________________</p>
 </body>
-{% endfor %}
+
 {% endblock %}
 
 

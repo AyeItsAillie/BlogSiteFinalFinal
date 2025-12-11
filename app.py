@@ -77,7 +77,6 @@ def view_all_posts():
 
 
 VIEW SINGLE POST
-ISSUE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 '''
@@ -85,13 +84,11 @@ ISSUE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
 def view_post(profileID):
     profiles = Profile.query.all()
-    post = Profile.query.get_or_404(profileID)
-    
-    #username = request.form.get('username', '').strip()
-    #email = request.form.get('email', '').strip()
-    
 
-    return render_template('viewPost.html', profiles=profiles)
+    #the magic code line (i spent 2 and a half hours troubleshooting this Josh T_T)
+    profile = Profile.query.get_or_404(profileID)
+
+    return render_template('viewPost.html', profiles=profiles, profile=profile)
 
 
 
@@ -115,17 +112,17 @@ def admin_profilesDeleteButton():
 @app.route('/admin/profiles/edit', methods=['GET', 'POST'])
 def admin_profiles_edit():
     if request.method == 'POST':
-        profileId = request.form.get('profileId', '')
+        profileID = request.form.get('profileId', '')
 
-        if not profileId:
+        if not profileID:
             error = f"No profile id provided."
             profiles = Profile.query.all()
             return render_template('admin_profiles.html', profiles=profiles, error=error)
 
-        profileToUpdate = Profile.query.filter_by(id=profileId).first()
+        profileToUpdate = Profile.query.filter_by(id=profileID).first()
 
         if not profileToUpdate:
-            error = f"No profile found to edit with id = {profileId}."
+            error = f"No profile found to edit with id = {profileID}."
             profiles = Profile.query.all()
             return render_template('admin_profiles.html', profiles=profiles, error=error)
 
@@ -151,10 +148,10 @@ def admin_profiles_edit():
         profiles = Profile.query.all()
         return render_template('admin_profiles.html', profiles=profiles, error=error)
 
-    profileToEdit = Profile.query.filter_by(id=profileId).first()
+    profileToEdit = Profile.query.filter_by(id=profileID).first()
 
     if not profileToEdit:
-        error = f"No profile found to edit with id = {profileId}"
+        error = f"No profile found to edit with id = {profileID}"
         profiles = Profile.query.all()
         return render_template('admin_profiles.html', profiles=profiles, error=error)
 

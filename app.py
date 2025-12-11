@@ -66,10 +66,23 @@ def admin_profiles():
     profiles = Profile.query.all()
     return render_template('Admin_profiles.html', profiles=profiles)
 
+
+@app.route('/posts', methods=['GET', 'POST'])
+def view_all_posts():
+    profiles = Profile.query.all()
+    
+    return render_template('viewAllPosts.html', profiles=profiles)
+
+
 @app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
 def view_post(profileID):
     profiles = Profile.query.all()
-    return render_template('viewPost.html', profiles=profiles, idvar=profileID)
+    post = Profile.query.get_or_404(profileID)
+    #username = request.form.get('username', '').strip()
+    #email = request.form.get('email', '').strip()
+    
+
+    return render_template('viewPost.html', profiles=profiles, idvar=profileID, postvar=post)
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])
 def admin_profilesDeleteButton():
@@ -159,20 +172,4 @@ def edit_post(profileID):
 
     return render_template('profileEdit.html', profile=profile, page_type='input')
 
-'''
-@app.route('/post/comment/<int:profileID>', methods=['POST'])
-def add_comment(post_id):
-    profile = Profile.query.get_or_404(post_id)
-    content = request.form.get('content', '').strip()
-    
-    if not content:
-        #flash('Comment cannot be empty.', 'danger')
-        return redirect(url_for('view_post', post_id=post_id))
-    
-    comment = Comment(content=content, user_id=current_user.id, post_id=post_id)
-    db.session.add(comment)
-    db.session.commit()
-    
-    #flash('Comment added successfully!', 'success')
-    return redirect(url_for('view_post', post_id=post_id))
-'''
+

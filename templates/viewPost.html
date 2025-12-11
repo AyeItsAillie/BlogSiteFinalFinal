@@ -1,7 +1,7 @@
-{% extends "base.html" %} {% block title%}{{super()}} - Create Comment{% endblock
+{% extends "base.html" %} {% block title%}{{super()}} - View Post{% endblock
 %} {% block content%}
 
-<h1>Create Comment</h1>
+<h1>View Post</h1>
 {% if error %}
 <p class="error">{{error}}</p>
 {% endif %}
@@ -9,10 +9,11 @@
 {% for profile in profiles %}
 <body>
     <h2>{{ profile.username }}</h2>
-    <p>The ID of this page is: {{ profile.post }}</p>
+    <p>{{ profile.post }}</p>
+    
 </body>
 {% endfor %}
-{%endblock%}
+{% endblock %}
 
 
   

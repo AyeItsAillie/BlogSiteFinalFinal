@@ -73,16 +73,27 @@ def view_all_posts():
     
     return render_template('viewAllPosts.html', profiles=profiles)
 
+'''
+
+
+VIEW SINGLE POST
+ISSUE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+'''
 
 @app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
 def view_post(profileID):
     profiles = Profile.query.all()
     post = Profile.query.get_or_404(profileID)
+    
     #username = request.form.get('username', '').strip()
     #email = request.form.get('email', '').strip()
     
 
-    return render_template('viewPost.html', profiles=profiles, idvar=profileID, postvar=post)
+    return render_template('viewPost.html', profiles=profiles)
+
+
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])
 def admin_profilesDeleteButton():

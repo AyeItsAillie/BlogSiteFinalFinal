@@ -16,7 +16,15 @@ class Profile(db.Model):
     email = db.Column(db.String(100),nullable=False)
     post = db.Column(db.String(200),nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
-    #comment = db.relationship('Comment', backref='post', lazy=True)
+    comments = db.relationship('Comments', backref='profile', lazy=True)
+
+
+class Comments(db.Model):
+    commentID = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey(
+        'profile.id'), nullable=False)
+    username = db.Column(db.String(25), nullable=False)
+    comment = db.Column(db.String(200), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -94,11 +102,25 @@ def view_post(profileID):
 @app.route('/view/post/<int:profileID>/comment', methods=['GET', 'POST'])
 def add_comment(profileID):
     profiles = Profile.query.all()
+    if request.method == 'POST':
+        new_comment = Comments(
+            id=request.form['id'],
+            username=request.form['username'],
+            comment=request.form['comment'],
+            
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('add_comment.html', profiles=profiles)
+      
+        
+    
 
 
-    profile = Profile.query.get_or_404(profileID)
 
-    return render_template('add_comment.html', profiles=profiles, profile=profile)
+
+
 
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])

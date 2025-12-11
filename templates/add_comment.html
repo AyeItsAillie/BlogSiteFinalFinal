@@ -1,44 +1,14 @@
 {% extends "base.html" %} {% block title%}{{super()}} - Add Comment{% endblock
 %} {% block content%}
-
 <h1>Add Comment</h1>
-<p>________________________________________</p>
-{% if error %}
-<p class="error">{{error}}</p>
-{% endif %}
+<form method="post">
+    <label>Username:</label><input type="text" name="username"><br>
+    <label>Comment:</label><input type="text" name="comment"><br>
 
+    
+        
+    
 
-<body>
-    <h2>{{ profile.username }}</h2>
-    <p>{{ profile.post }}</p>
-    <p>________________________________________</p>
-    <h3>Comment:</h3>
-<form method="POST">
-    <div>
-    <label for="username">Username *:</label>
-    <input type="text" id="username" name="username" required>
-    </div>
-    <div>
-    <label for="comment">Comment *:</label>
-    <input type="text" id="comment" name="comment" required>
-    </div>
-    <button type="submit">Submit Commment</button>
+    <button type="submit">Post Comment</button>
 </form>
-    <div>
-        <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
-          <input
-            type="hidden"
-            name="profileId"
-            id="profileId"
-            value="{{profile.id}}"
-          />
-        <input name="viewPost" type="hidden" value="soft" />
-          <button type="submit">Cancel</button>
-        </form>
-      </div>
-</body>
-
 {% endblock %}
-
-
-  

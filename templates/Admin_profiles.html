@@ -8,7 +8,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Post</th>
-        <th>Comment?</th>
+        <th>View</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -20,15 +20,15 @@
         <td>{{ profile.post }}</td>
          <td>
             <div>
-        <form method="POST" action="{{url_for('create_post_comment', profileID=profile.id)}}">
+        <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
           <input
             type="hidden"
             name="profileId"
             id="profileId"
             value="{{profile.id}}"
           />
-        <input name="createPostComment" type="hidden" value="soft" />
-          <button type="submit">Comment</button>
+        <input name="viewPost" type="hidden" value="soft" />
+          <button type="submit">View</button>
         </form>
       </div>
         </td>

@@ -66,10 +66,10 @@ def admin_profiles():
     profiles = Profile.query.all()
     return render_template('Admin_profiles.html', profiles=profiles)
 
-@app.route('/create/post/comment/<int:profileID>', methods=['GET', 'POST'])
-def create_post_comment(profileID):
+@app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
+def view_post(profileID):
     profiles = Profile.query.all()
-    return render_template('createPostComment.html', profiles=profiles)
+    return render_template('viewPost.html', profiles=profiles, idvar=profileID)
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])
 def admin_profilesDeleteButton():

@@ -5,6 +5,11 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-{% block content %}{% endblock %}
+    <nav>
+        <a href="{{ url_for('profile') }}">Create Profile</a> |
+        <a href="{{ url_for('admin_profiles') }}">Admin Profiles</a> |
+    </nav>
+
 </body>
-</html>
+</head>
+ {% block content %}{% endblock %} 

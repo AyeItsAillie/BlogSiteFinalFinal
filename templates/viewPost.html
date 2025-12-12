@@ -11,24 +11,20 @@
 <body>
     <h2>{{ profile.username }}</h2>
     <p>{{ profile.post }}</p>
+    
     <p>________________________________________</p>
     <div>
-        <form method="POST" action="{{url_for('add_comment', profileID=profile.id)}}">
-          <input
-            type="hidden"
-            name="profileId"
-            id="profileId"
-            value="{{profile.id}}"
-          />
-        <input name="viewPost" type="hidden" value="soft" />
-          <button type="submit">Add Comment</button>
-        </form>
-      </div>
-      
-        
-      
+                <a href="{{url_for('add_comment', profileID=profile.id)}}"
+                ><button>Add Comment</button></a>
+            </div>
 </body>
 
+{% for profile in profiles %}
+<body>
+  {{ comments.username }}
+  {{ comments.comment }}
+</body>
+{% endfor %}
 {% endblock %}
 
 

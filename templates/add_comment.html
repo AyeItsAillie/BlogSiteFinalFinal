@@ -20,12 +20,15 @@
             id="profileId"
             value="{{profile.id}}"
           />
-          <label>Username:</label><input type="text" name="username">
-
-          <label>Comment:</label><input type="text" name="comment">
-
-          <!-- <input name="viewPost" type="hidden" value="soft" /> -->
-          <button type="submit">Add Comment</button>
+          <label>Username:</label>
+          <input type="text" name="username" required>
+            <div></div>
+          <label>Comment:</label>
+          <input type="text" name="comment"required>
+            <div></div>
+          <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
+          <button type="submit">Submit Comment</button>
+        </form>
         </form>
       </div>
       

@@ -93,26 +93,33 @@ VIEW SINGLE POST
 @app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
 def view_post(profileID):
     profiles = Profile.query.all()
+    comments = Comments.query.all()
 
     #the magic code line (i spent 2 and a half hours troubleshooting this Josh T_T)
     profile = Profile.query.get_or_404(profileID)
+    #comment = Comments.query.get_or_404(commentID)
 
-    return render_template('viewPost.html', profiles=profiles, profile=profile)
+    return render_template('viewPost.html', profiles=profiles, profile=profile, comments=comments)
 
 @app.route('/view/post/<int:profileID>/comment', methods=['GET', 'POST'])
 def add_comment(profileID):
+    
     profiles = Profile.query.all()
+    profile = Profile.query.get_or_404(profileID)
+    comments = Comments.query.all()
+    #comments = Comments.query.get_or_404(commentID)
     if request.method == 'POST':
         new_comment = Comments(
-            id=request.form.get('id', '').strip(),
+            id=profileID,
             username=request.form.get('username', '').strip(),
             comment=request.form.get('comment', '').strip(),
             
         )
         db.session.add(new_comment)
         db.session.commit()
-        return redirect(url_for('add_comment'))
-    return render_template('add_comment.html', profiles=profiles)
+        #THIS LINE BREAKS EVERYTHING!!!! VVV
+        #return redirect(url_for('add_comment'))
+    return render_template('add_comment.html', profiles=profiles, profile = profile, comments = comments)
       
         
     

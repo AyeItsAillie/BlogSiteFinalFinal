@@ -150,11 +150,11 @@ def admin_profilesDeleteButton():
 def admin_commentsDeleteButton():
     profiles = Profile.query.all()
     comments = Comments.query.all()
-    profile = Profile.query.all
+    profile = Profile.query.all()
     try:
-        commentID = request.form.get('commentID', '').strip()
+        commentIDtoDelete = request.form.get('commentID', '').strip()
         #THIS LINE needs to be changed V
-        comment_to_delete = Comments.query.filter_by(id=commentID).first()
+        comment_to_delete = Comments.query.filter_by(commentID=commentIDtoDelete).first()
         if not comment_to_delete:
             error = f"No profiles found with the specified id found."
             comments = Comments.query.all()

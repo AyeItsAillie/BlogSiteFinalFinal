@@ -104,14 +104,14 @@ def add_comment(profileID):
     profiles = Profile.query.all()
     if request.method == 'POST':
         new_comment = Comments(
-            id=request.form['id'],
-            username=request.form['username'],
-            comment=request.form['comment'],
+            id=request.form.get('id', '').strip(),
+            username=request.form.get('username', '').strip(),
+            comment=request.form.get('comment', '').strip(),
             
         )
         db.session.add(new_comment)
         db.session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('add_comment'))
     return render_template('add_comment.html', profiles=profiles)
       
         

@@ -19,9 +19,11 @@
             </div>
 </body>
 
-{% for profile in profiles %}
+{% for comments in profiles %}
 <body>
+  
   {{ comments.username }}
+  <div></div>
   {{ comments.comment }}
 </body>
 {% endfor %}

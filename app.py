@@ -16,6 +16,15 @@ class Profile(db.Model):
     email = db.Column(db.String(100),nullable=False)
     post = db.Column(db.String(200),nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    comments = db.relationship('Comments', backref='profile', lazy=True)
+
+
+class Comments(db.Model):
+    commentID = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey(
+        'profile.id'), nullable=False)
+    username = db.Column(db.String(25), nullable=False)
+    comment = db.Column(db.String(200), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -64,12 +73,61 @@ def profile():
 @app.route('/admin/profiles')
 def admin_profiles():
     profiles = Profile.query.all()
-    return render_template('Admin_profiles.html', profiles=profiles)
+    comments = Comments.query.all()
+    return render_template('Admin_profiles.html', profiles=profiles, comments=comments, profile=profile)
 
-@app.route('/create/post/comment/<int:profileID>', methods=['GET', 'POST'])
-def create_post_comment(profileID):
+
+@app.route('/posts', methods=['GET', 'POST'])
+def view_all_posts():
     profiles = Profile.query.all()
-    return render_template('createPostComment.html', profiles=profiles)
+    
+    return render_template('viewAllPosts.html', profiles=profiles)
+
+'''
+
+
+VIEW SINGLE POST
+
+
+'''
+
+@app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
+def view_post(profileID):
+    profiles = Profile.query.all()
+    comments = Comments.query.filter(Comments.id == profileID).all()
+
+    #the magic code line (i spent 2 and a half hours troubleshooting this Josh T_T)
+    profile = Profile.query.get_or_404(profileID)
+    return render_template('viewPost.html', profiles=profiles, profile=profile, comments=comments)
+
+@app.route('/view/post/<int:profileID>/comment', methods=['GET', 'POST'])
+def add_comment(profileID):
+    
+    profiles = Profile.query.all()
+    profile = Profile.query.get_or_404(profileID)
+    comments = Comments.query.all()
+    #comments = Comments.query.get_or_404(commentID)
+    if request.method == 'POST':
+        new_comment = Comments(
+            id=profileID,
+            username=request.form.get('username', '').strip(),
+            comment=request.form.get('comment', '').strip(),
+            
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        
+        return redirect(f'/view/post/{profileID}')
+    return render_template('add_comment.html', profiles=profiles, profile = profile, comments = comments)
+      
+        
+    
+
+
+
+
+
+
 
 @app.route('/admin/profiles/deleteButton', methods=['POST'])
 def admin_profilesDeleteButton():
@@ -87,21 +145,43 @@ def admin_profilesDeleteButton():
         error = f"Error deleting profile: {str(e)}"
         profiles = Profile.query.all()
         return render_template('Admin_profiles.html', profiles=profiles, error=error)
+    
+@app.route('/admin/comments/deleteButton', methods=['POST'])
+def admin_commentsDeleteButton():
+    profiles = Profile.query.all()
+    comments = Comments.query.all()
+    profile = Profile.query.all()
+    try:
+        commentIDtoDelete = request.form.get('commentID', '').strip()
+        #THIS LINE needs to be changed V
+        comment_to_delete = Comments.query.filter_by(commentID=commentIDtoDelete).first()
+        if not comment_to_delete:
+            error = f"No profiles found with the specified id found."
+            comments = Comments.query.all()
+            return render_template('Admin_profiles.html', profiles=profiles, error=error, comments=comments, profile=profile)
+        db.session.delete(comment_to_delete)
+        db.session.commit()
+        return redirect(url_for('Admin_profiles'))
+    except Exception as e:
+        error = f"Error deleting profile: {str(e)}"
+        comments = Comments.query.all()
+        return render_template('Admin_profiles.html', profiles=profiles, error=error, comments=comments, profile=profile)
 
 @app.route('/admin/profiles/edit', methods=['GET', 'POST'])
 def admin_profiles_edit():
     if request.method == 'POST':
-        profileId = request.form.get('profileId', '')
+        profileID = request.form.get('profileId', '')
+        
 
-        if not profileId:
+        if not profileID:
             error = f"No profile id provided."
             profiles = Profile.query.all()
             return render_template('admin_profiles.html', profiles=profiles, error=error)
 
-        profileToUpdate = Profile.query.filter_by(id=profileId).first()
+        profileToUpdate = Profile.query.filter_by(id=profileID).first()
 
         if not profileToUpdate:
-            error = f"No profile found to edit with id = {profileId}."
+            error = f"No profile found to edit with id = {profileID}."
             profiles = Profile.query.all()
             return render_template('admin_profiles.html', profiles=profiles, error=error)
 
@@ -127,10 +207,10 @@ def admin_profiles_edit():
         profiles = Profile.query.all()
         return render_template('admin_profiles.html', profiles=profiles, error=error)
 
-    profileToEdit = Profile.query.filter_by(id=profileId).first()
+    profileToEdit = Profile.query.filter_by(id=profileID).first()
 
     if not profileToEdit:
-        error = f"No profile found to edit with id = {profileId}"
+        error = f"No profile found to edit with id = {profileID}"
         profiles = Profile.query.all()
         return render_template('admin_profiles.html', profiles=profiles, error=error)
 
@@ -159,20 +239,4 @@ def edit_post(profileID):
 
     return render_template('profileEdit.html', profile=profile, page_type='input')
 
-'''
-@app.route('/post/comment/<int:profileID>', methods=['POST'])
-def add_comment(post_id):
-    profile = Profile.query.get_or_404(post_id)
-    content = request.form.get('content', '').strip()
-    
-    if not content:
-        #flash('Comment cannot be empty.', 'danger')
-        return redirect(url_for('view_post', post_id=post_id))
-    
-    comment = Comment(content=content, user_id=current_user.id, post_id=post_id)
-    db.session.add(comment)
-    db.session.commit()
-    
-    #flash('Comment added successfully!', 'success')
-    return redirect(url_for('view_post', post_id=post_id))
-'''
+

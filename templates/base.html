@@ -7,9 +7,10 @@
 <body>
     <nav>
         <a href="{{ url_for('profile') }}">Create Post</a> |
-        <a href="{{ url_for('admin_profiles') }}">View Posts</a> |
+        <a href="{{ url_for('view_all_posts') }}">View All Posts</a> |
+        <a href="{{ url_for('admin_profiles') }}">Admin View</a> |
     </nav>
 
 </body>
 </head>
- {% block content %}{% endblock %} 
+{% block content %}{% endblock %} 

@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title%}{{super()}} - All Posts{% endblock
+%} {% block content%}
+
+<h1>All Posts</h1>
+<div>________________________________________</div>
+{% if error %}
+<p class="error">{{error}}</p>
+{% endif %}
+
+{% for profile in profiles %}
+<body>
+    <h2>{{ profile.username }}</h2>
+    <p>{{ profile.post }}</p>
+    <div>
+        <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
+          <input
+            type="hidden"
+            name="profileId"
+            id="profileId"
+            value="{{profile.id}}"
+          />
+        <input name="viewPost" type="hidden" value="soft" />
+          <button type="submit">Open Post</button>
+        </form>
+      </div>
+      <div>________________________________________</div>
+</body>
+{% endfor %}
+{%endblock%}
+
+
+  

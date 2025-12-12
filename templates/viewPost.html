@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title%}{{super()}} - View Post{% endblock
+%} {% block content%}
+
+<h1>View Post</h1>
+<p>________________________________________</p>
+{% if error %}
+<p class="error">{{error}}</p>
+{% endif %}
+
+
+<body>
+    <h2>{{ profile.username }}</h2>
+    <p>{{ profile.post }}</p>
+    
+    <p>________________________________________</p>
+    <div>
+                <a href="{{url_for('add_comment', profileID=profile.id)}}"
+                ><button>Add Comment</button></a>
+            </div>
+</body>
+
+{% for comment in comments %}
+<body>
+  <p>{{ comment.username }}: {{ comment.comment }}</p>
+  
+</body>
+
+{% endfor %}
+{% endblock %}
+
+
+  

@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% block title%}{{super()}} - Profiles Admin {% endblock %}
+{% block title%}{{super()}} - Admin {% endblock %}
 {% block content %}
-<h1>All Feedback</h1>
+<h1>All Posts and Comments</h1>
 <table class="table table-striped" border="1">
     <tr>
         <th>ID</th>
         <th>Username</th>
         <th>Email</th>
         <th>Post</th>
-        <th>Comment?</th>
+        <th>View</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -20,15 +20,15 @@
         <td>{{ profile.post }}</td>
          <td>
             <div>
-        <form method="POST" action="{{url_for('create_post_comment', profileID=profile.id)}}">
+        <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
           <input
             type="hidden"
             name="profileId"
             id="profileId"
             value="{{profile.id}}"
           />
-        <input name="createPostComment" type="hidden" value="soft" />
-          <button type="submit">Comment</button>
+        <input name="viewPost" type="hidden" value="soft" />
+          <button type="submit">View</button>
         </form>
       </div>
         </td>
@@ -55,6 +55,52 @@
         
     </tr>
     {% endfor %}
+</table>
+<table class="table table-striped" border="1">
+  <tr>
+    <th>CommentID</th>
+    <th>PostID</th>
+    <th>Username</th>
+    <th>Comment</th>
+    <th>Delete</th>
+  </tr>
+ 
+<body>
+{% for comment in comments %}
+  <tr>
+    <td>{{ comment.commentID }}</td>
+    <td>{{ comment.id }}</td>
+    <td>{{ comment.username }}</td>
+    <td>{{ comment.comment }}</td>
+    <div>
+        <form method="POST" action="{{url_for('admin_commentsDeleteButton')}}">
+          <input
+            type="hidden"
+            name="commentID"
+            id="commentID"
+            value="{{comment.commentID}}"
+          />
+          
+        <td>
+            <div>
+        <form method="POST" action="{{url_for('admin_commentsDeleteButton')}}">
+          <input
+            type="hidden"
+            name="profileId"
+            id="profileId"
+            value="{{profile.id}}"
+          />
+        <input name="deleteStyle" type="hidden" value="soft" />
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+        </td>
+        </form>
+      </div>
+  </tr>
+  
+  {% endfor %}
+</body>
 </table>
 
 {% endblock %}

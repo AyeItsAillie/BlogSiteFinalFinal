@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block title%}{{super()}} - View Post{% endblock
+%} {% block content%}
+
+<h1>View Post</h1>
+<p>________________________________________</p>
+{% if error %}
+<p class="error">{{error}}</p>
+{% endif %}
+
+
+<body>
+    <h2>{{ profile.username }}</h2>
+    <p>{{ profile.post }}</p>
+    <p>________________________________________</p>
+    <div>
+        <form method="POST" action="{{url_for('add_comment', profileID=profile.id)}}">
+          <input
+            type="hidden"
+            name="profileId"
+            id="profileId"
+            value="{{profile.id}}"
+          />
+          <label>Username:</label>
+          <input type="text" name="username" required>
+            <div></div>
+          <label>Comment:</label>
+          <input type="text" name="comment"required>
+            <div></div>
+          <form method="POST" action="{{url_for('view_post', profileID=profile.id)}}">
+          <button type="submit">Submit Comment</button>
+        </form>
+        </form>
+      </div>   
+</body>
+
+{% endblock %}

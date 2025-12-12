@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title%}{{super()}} - Profiles Admin {% endblock %}
+{% block title%}{{super()}} - Admin {% endblock %}
 {% block content %}
-<h1>All Feedback</h1>
+<h1>All Posts and Comments</h1>
 <table class="table table-striped" border="1">
     <tr>
         <th>ID</th>
@@ -62,17 +62,44 @@
     <th>PostID</th>
     <th>Username</th>
     <th>Comment</th>
+    <th>Delete</th>
   </tr>
  
 <body>
+{% for comment in comments %}
   <tr>
-  {% for comment in comments %}
     <td>{{ comment.commentID }}</td>
     <td>{{ comment.id }}</td>
     <td>{{ comment.username }}</td>
     <td>{{ comment.comment }}</td>
+    <div>
+        <form method="POST" action="{{url_for('admin_commentsDeleteButton')}}">
+          <input
+            type="hidden"
+            name="commentID"
+            id="commentID"
+            value="{{comment.id}}"
+          />
+        <td>
+            <div>
+        <form method="POST" action="{{url_for('admin_commentsDeleteButton')}}">
+          <input
+            type="hidden"
+            name="profileId"
+            id="profileId"
+            value="{{profile.id}}"
+          />
+        <input name="deleteStyle" type="hidden" value="soft" />
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+        </td>
+        </form>
+      </div>
   </tr>
+  
+  {% endfor %}
 </body>
 </table>
-{% endfor %}
+
 {% endblock %}

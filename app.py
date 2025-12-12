@@ -145,6 +145,27 @@ def admin_profilesDeleteButton():
         error = f"Error deleting profile: {str(e)}"
         profiles = Profile.query.all()
         return render_template('Admin_profiles.html', profiles=profiles, error=error)
+    
+@app.route('/admin/comments/deleteButton', methods=['POST'])
+def admin_commentsDeleteButton():
+    profiles = Profile.query.all()
+    comments = Comments.query.all()
+    profile = Profile.query.all
+    try:
+        commentID = request.form.get('commentID', '').strip()
+        #THIS LINE needs to be changed V
+        comment_to_delete = Comments.query.filter_by(id=commentID).first()
+        if not comment_to_delete:
+            error = f"No profiles found with the specified id found."
+            comments = Comments.query.all()
+            return render_template('Admin_profiles.html', profiles=profiles, error=error, comments=comments, profile=profile)
+        db.session.delete(comment_to_delete)
+        db.session.commit()
+        return redirect(url_for('Admin_profiles'))
+    except Exception as e:
+        error = f"Error deleting profile: {str(e)}"
+        comments = Comments.query.all()
+        return render_template('Admin_profiles.html', profiles=profiles, error=error, comments=comments, profile=profile)
 
 @app.route('/admin/profiles/edit', methods=['GET', 'POST'])
 def admin_profiles_edit():

@@ -56,5 +56,23 @@
     </tr>
     {% endfor %}
 </table>
-
+<table class="table table-striped" border="1">
+  <tr>
+    <th>CommentID</th>
+    <th>PostID</th>
+    <th>Username</th>
+    <th>Comment</th>
+  </tr>
+ 
+<body>
+  <tr>
+  {% for comment in comments %}
+    <td>{{ comment.commentID }}</td>
+    <td>{{ comment.id }}</td>
+    <td>{{ comment.username }}</td>
+    <td>{{ comment.comment }}</td>
+  </tr>
+</body>
+</table>
+{% endfor %}
 {% endblock %}

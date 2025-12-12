@@ -73,7 +73,8 @@ def profile():
 @app.route('/admin/profiles')
 def admin_profiles():
     profiles = Profile.query.all()
-    return render_template('Admin_profiles.html', profiles=profiles)
+    comments = Comments.query.all()
+    return render_template('Admin_profiles.html', profiles=profiles, comments=comments, profile=profile)
 
 
 @app.route('/posts', methods=['GET', 'POST'])
@@ -93,12 +94,10 @@ VIEW SINGLE POST
 @app.route('/view/post/<int:profileID>', methods=['GET', 'POST'])
 def view_post(profileID):
     profiles = Profile.query.all()
-    comments = Comments.query.all()
+    comments = Comments.query.filter(Comments.id == profileID).all()
 
     #the magic code line (i spent 2 and a half hours troubleshooting this Josh T_T)
     profile = Profile.query.get_or_404(profileID)
-    #comment = Comments.query.get_or_404(commentID)
-
     return render_template('viewPost.html', profiles=profiles, profile=profile, comments=comments)
 
 @app.route('/view/post/<int:profileID>/comment', methods=['GET', 'POST'])
@@ -117,8 +116,8 @@ def add_comment(profileID):
         )
         db.session.add(new_comment)
         db.session.commit()
-        #THIS LINE BREAKS EVERYTHING!!!! VVV
-        #return redirect(url_for('add_comment'))
+        
+        return redirect(f'/view/post/{profileID}')
     return render_template('add_comment.html', profiles=profiles, profile = profile, comments = comments)
       
         
@@ -151,6 +150,7 @@ def admin_profilesDeleteButton():
 def admin_profiles_edit():
     if request.method == 'POST':
         profileID = request.form.get('profileId', '')
+        
 
         if not profileID:
             error = f"No profile id provided."
